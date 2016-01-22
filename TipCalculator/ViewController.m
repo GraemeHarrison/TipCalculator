@@ -11,6 +11,8 @@
 @interface ViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *billAmountTextField;
 @property (strong, nonatomic) IBOutlet UILabel *tipAmountLabel;
+@property (strong, nonatomic) IBOutlet UITextField *tipPercentageTextField;
+@property (assign, nonatomic) CGFloat defaultTip;
 
 @end
 
@@ -21,6 +23,7 @@
     [super viewDidLoad];
     
     [self.billAmountTextField resignFirstResponder];
+    self.defaultTip = 0.15;
 
 }
 
@@ -31,8 +34,17 @@
 
 - (IBAction)calculateTip:(UIButton *)sender {
     CGFloat num = [self.billAmountTextField.text integerValue];
-    CGFloat tip = num * 0.1500;
-    CGFloat roundedNum = ceilf(tip * 100.0) / 100.0;
+    CGFloat tipPercent;
+
+    if ([self.tipPercentageTextField.text isEqualToString:@""]) {
+        tipPercent = 0.15;
+    } else {
+        tipPercent = [self.tipPercentageTextField.text integerValue] / 100.0;
+    }
+    
+    CGFloat tipAmount = num * tipPercent;
+
+    CGFloat roundedNum = ceilf(tipAmount * 100.0) / 100.0;
     
     self.tipAmountLabel.text = [NSString stringWithFormat:@"Tip Amount: %.2f", roundedNum];
     
